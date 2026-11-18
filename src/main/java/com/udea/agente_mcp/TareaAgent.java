@@ -1,3 +1,4 @@
+// Autor: Diego Alexander Sánchez
 package com.udea.agente_mcp;
 
 import com.google.adk.agents.BaseAgent;
@@ -23,27 +24,24 @@ public class TareaAgent {
             List<BaseTool> mcpTools = mcpToolset.getTools(null)
                     .toList()
                     .blockingGet();
-            System.out.println("Tools MCP: " +mcpTools.size());
+            System.out.println("Tools MCP: " + mcpTools.size());
 
             return LlmAgent.builder()
-                    .name("TareaAgent")
-                    .model("gemini-2.5-flash")
-                    .description("Agente de Tareas")
-                    .instruction("Usa las Tools del MCP de tareas para administrar tus pendientes")
+                    .name("SupermercadoAgent")
+                    .model("gemini-1.5-flash")
+                    .description("Agente de pedidos de supermercado a domicilio")
+                    .instruction("Eres un asistente de un supermercado con entrega a domicilio. Usa las herramientas MCP para mostrar productos, crear pedidos, agregar productos, consultar, confirmar y cancelar pedidos. Antes de crear un pedido pide el nombre del cliente y la dirección de entrega. Muestra el total al final. Antes de cancelar un pedido, confirma el id con el usuario. Responde siempre en español.")
                     .tools(mcpTools)
                     .build();
 
-
-        }catch (Exception e) {
-            System.err.println("MCP no disponible: "+ e.getMessage());
-           return LlmAgent.builder()
-                   .name("TareaAgent")
-                   .model("gemini-2.5-flash")
-                           .description("Agente de Tareas no disponible")
-                           .instruction("El servidor MCP  no esta disponible")
-                            .build();
+        } catch (Exception e) {
+            System.err.println("MCP no disponible en http://localhost:8088/mcp: " + e.getMessage());
+            return LlmAgent.builder()
+                    .name("SupermercadoAgent")
+                    .model("gemini-1.5-flash")
+                    .description("Agente de pedidos no disponible")
+                    .instruction("El servidor MCP no está disponible")
+                    .build();
         }
-
-
-           }
+    }
 }
